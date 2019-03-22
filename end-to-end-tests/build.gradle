@@ -1,0 +1,13 @@
+dependencies {
+
+    testCompile project(":order-service-api-events")
+
+    testCompile project(":order-history-service-common")
+    testCompile project(":customer-service-api-web")
+    testCompile project(":order-service-api-web")
+
+    testCompile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    testCompile "io.eventuate.util:eventuate-util-test:$eventuateUtilVersion"
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+}
+

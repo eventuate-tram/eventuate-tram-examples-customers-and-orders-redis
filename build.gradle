@@ -1,0 +1,104 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/milestone" }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+        classpath "com.avast.gradle:gradle-docker-compose-plugin:0.9.1"
+    }
+}
+
+apply plugin: VerifyDockerHostIp
+apply plugin: 'docker-compose'
+apply plugin: WaitForMySqlPlugin
+
+
+dockerCompose {
+    tcpPortsToIgnoreWhenWaiting = [2888, 3888]
+    projectName = "redisconf-2019"
+    removeOrphans = true
+
+    if (project.hasProperty("microservices"))
+        startedServices = microservices.split(",")
+    else
+        startedServices = ['zookeeper', 'mysql', 'redis', 'cdc-service', 'customer-service', 'order-service', 'order-history-service']
+
+    databases {
+        startedServices = ['zookeeper', 'mysql', 'redis']
+        projectName = "redisconf-2019"
+    }
+
+    infrastructure {
+        startedServices = ['cdc-service']
+        projectName = "redisconf-2019"
+    }
+
+    javaDevelopment {
+        useComposeFiles = ["docker-compose-java-development.yml"]
+    }
+
+}
+
+databasesComposeUp.finalizedBy(waitForMySql)
+infrastructureComposeUp.dependsOn(databasesComposeUp)
+composeUp.dependsOn(infrastructureComposeUp)
+
+
+task prepareJavaDevelopmentDockerImage(type:Exec) {
+    commandLine './prepare-java-development-docker-image.sh'
+}
+
+javaDevelopmentComposeBuild.dependsOn(prepareJavaDevelopmentDockerImage)
+
+subprojects.each {
+    if (it.name.endsWith("-service")) {
+        composeUp.dependsOn("${it.name}:assemble")
+        composeBuild.dependsOn("${it.name}:assemble")
+    }
+}
+
+subprojects {
+
+    apply plugin: "java"
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://repo.spring.io/milestone" }
+        maven {
+            url "https://dl.bintray.com/eventuateio-oss/eventuate-maven-release"
+        }
+        eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
+    }
+
+    // Deadlock on H2 shutdown - multiple shutdown hooks for appctx
+    test {
+        forkEvery 1
+    }
+
+}
+
+
+task buildAndTestAll(type: GradleBuild) {
+    List<String> t = ["testClasses"]
+
+    if (!(project.hasProperty("buildAndTestAllUseExisting") && buildAndTestAllUseExisting))
+        t.add("composeDown")
+    else
+        println "Using existing containers"
+
+    t.add("infrastructureComposeUp")
+    t.addAll(subprojects.collect { it.name }.findAll { it != "end-to-end-tests" }.collect { ":" + it + ":build" })
+    t.add("composeUp")
+    t.addAll([":end-to-end-tests:cleanTest", ":end-to-end-tests:test"])
+    if (!(project.hasProperty("buildAndTestAllKeepRunning") && buildAndTestAllKeepRunning))
+        t.add("composeDown")
+    else
+        println "Containers left running"
+
+    tasks = t
+}

@@ -1,0 +1,8 @@
+dependencies {
+    compile project(":common")
+    compile project(":order-service-api-events")
+
+    //compile project(":order-backend")
+}
+
+

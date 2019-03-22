@@ -1,0 +1,26 @@
+apply plugin: FtgoServicePlugin
+
+dependencies {
+    compile project(":common-swagger")
+    compile project(":common")
+    compile project(":order-service-api-events")
+    compile project(":customer-service-api-events")
+    compile project(":order-service-api-web")
+
+
+    compile "io.eventuate.tram.core:eventuate-tram-events:$eventuateTramVersion"
+
+    compile "io.eventuate.tram.core:eventuate-tram-jdbc-redis:$eventuateTramVersion"
+
+    compile 'mysql:mysql-connector-java:5.1.36'
+
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+
+}
+
+
+

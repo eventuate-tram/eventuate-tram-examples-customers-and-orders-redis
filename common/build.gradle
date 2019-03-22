@@ -1,0 +1,5 @@
+dependencies {
+    compile "commons-lang:commons-lang:2.6"
+    compileOnly "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+}
+

@@ -1,0 +1,10 @@
+test.enabled=false
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'mysql:mysql-connector-java:5.1.39'
+    compile 'commons-lang:commons-lang:2.6'
+}
