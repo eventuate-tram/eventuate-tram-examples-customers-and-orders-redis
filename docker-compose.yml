@@ -117,7 +117,7 @@ services:
 # Development
 
   java-development:
-    image: test-java-development:latest
+    image: eventuateio/eventuate-tram-examples-customers-and-orders-redis-java-development:latest
     volumes:
       - .:/development
       - /var/run/docker.sock:/var/run/docker.sock
