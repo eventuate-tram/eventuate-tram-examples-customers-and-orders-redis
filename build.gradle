@@ -65,6 +65,9 @@ subprojects {
 
     apply plugin: "java"
 
+    targetCompatibility = '8'
+    sourceCompatibility = '8'
+
     repositories {
         mavenCentral()
         jcenter()
