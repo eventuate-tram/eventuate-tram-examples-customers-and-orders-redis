@@ -25,10 +25,10 @@ dockerCompose {
     if (project.hasProperty("microservices"))
         startedServices = microservices.split(",")
     else
-        startedServices = ['zookeeper', 'mysql', 'redis', 'cdc-service', 'customer-service', 'order-service', 'order-history-service']
+        startedServices = ['mysql', 'redis', 'cdc-service', 'customer-service', 'order-service', 'order-history-service']
 
     databases {
-        startedServices = ['zookeeper', 'mysql', 'redis']
+        startedServices = ['mysql', 'redis']
         projectName = "redisconf-2019"
     }
 
