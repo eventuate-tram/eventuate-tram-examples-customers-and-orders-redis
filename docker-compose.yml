@@ -72,7 +72,7 @@ services:
       JAVA_OPTS: -Xmx128m
 
   mysql:
-    image: eventuateio/eventuate-tram-mysql:0.20.0.REDIS.M1
+    image: eventuateio/eventuate-tram-mysql:0.20.0.RC2
     ports:
       - 3306:3306
     environment:
