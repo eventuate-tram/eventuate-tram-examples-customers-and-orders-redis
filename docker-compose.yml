@@ -72,7 +72,7 @@ services:
       JAVA_OPTS: -Xmx128m
 
   mysql:
-    image: eventuateio/eventuate-tram-mysql:0.20.0.RC2
+    image: eventuateio/eventuate-tram-mysql:0.21.2.RELEASE
     ports:
       - 3306:3306
     environment:
@@ -86,7 +86,7 @@ services:
       - 6379:6379
 
   cdc-service:
-    image: eventuateio/eventuate-tram-cdc-mysql-service:0.20.0.RC3
+    image: eventuateio/eventuate-tram-cdc-mysql-service:0.21.2.RELEASE
     ports:
       - "8099:8080"
     depends_on:
