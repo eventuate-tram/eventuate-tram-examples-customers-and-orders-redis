@@ -5,7 +5,8 @@ import io.eventuate.examples.tram.ordersandcustomers.customers.service.CustomerS
 import io.eventuate.examples.tram.ordersandcustomers.customers.service.CustomerServiceEventSubscriber;
 import io.eventuate.tram.events.publisher.TramEventsPublisherConfiguration;
 import io.eventuate.tram.events.subscriber.DomainEventDispatcher;
-import io.eventuate.tram.messaging.consumer.MessageConsumer;
+import io.eventuate.tram.events.subscriber.DomainEventDispatcherFactory;
+import io.eventuate.tram.events.subscriber.TramEventSubscriberConfiguration;
 import io.eventuate.tram.messaging.producer.jdbc.TramMessageProducerJdbcConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,8 @@ import org.springframework.retry.annotation.EnableRetry;
 
 @Configuration
 @Import({TramEventsPublisherConfiguration.class,
-        TramMessageProducerJdbcConfiguration.class})
+        TramMessageProducerJdbcConfiguration.class,
+        TramEventSubscriberConfiguration.class})
 @EnableJpaRepositories
 @EnableAutoConfiguration
 @EnableRetry
@@ -28,8 +30,9 @@ public class CustomerCommonConfiguration {
   }
 
   @Bean
-  public DomainEventDispatcher domainEventDispatcher(CustomerServiceEventSubscriber customerServiceEventSubscriber, MessageConsumer messageConsumer) {
-    return new DomainEventDispatcher("customerServiceEventSubscriber", customerServiceEventSubscriber.domainEventHandlers(), messageConsumer);
+  public DomainEventDispatcher domainEventDispatcher(DomainEventDispatcherFactory domainEventDispatcherFactory,
+                                                     CustomerServiceEventSubscriber customerServiceEventSubscriber) {
+    return domainEventDispatcherFactory.make("customerServiceEventSubscriber", customerServiceEventSubscriber.domainEventHandlers());
   }
 
   @Bean

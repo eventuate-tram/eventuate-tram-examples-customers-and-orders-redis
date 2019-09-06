@@ -2,15 +2,19 @@ package io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.messag
 
 import io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.service.OrderHistoryServiceServiceConfiguration;
 import io.eventuate.tram.consumer.common.TramNoopDuplicateMessageDetectorConfiguration;
-import io.eventuate.tram.consumer.redis.TramConsumerRedisConfiguration;
+import io.eventuate.tram.consumer.redis.EventuateTramRedisMessageConsumerConfiguration;
 import io.eventuate.tram.events.subscriber.DomainEventDispatcher;
-import io.eventuate.tram.messaging.consumer.MessageConsumer;
+import io.eventuate.tram.events.subscriber.DomainEventDispatcherFactory;
+import io.eventuate.tram.events.subscriber.TramEventSubscriberConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({OrderHistoryServiceServiceConfiguration.class, TramConsumerRedisConfiguration.class, TramNoopDuplicateMessageDetectorConfiguration.class})
+@Import({OrderHistoryServiceServiceConfiguration.class,
+        EventuateTramRedisMessageConsumerConfiguration.class,
+        TramNoopDuplicateMessageDetectorConfiguration.class,
+        TramEventSubscriberConfiguration.class})
 public class OrderHistoryServiceMessagingConfiguration {
 
   @Bean
@@ -19,11 +23,11 @@ public class OrderHistoryServiceMessagingConfiguration {
   }
 
   @Bean
-  public DomainEventDispatcher orderHistoryServiceEventDispatcher(OrderHistoryServiceEventSubscriber orderHistoryServiceEventSubscriber,
-                                                                       MessageConsumer messageConsumer) {
+  public DomainEventDispatcher orderHistoryServiceEventDispatcher(DomainEventDispatcherFactory domainEventDispatcherFactory,
+                                                                  OrderHistoryServiceEventSubscriber orderHistoryServiceEventSubscriber) {
 
-    return new DomainEventDispatcher("orderHistoryServiceEvents",
-            orderHistoryServiceEventSubscriber.domainEventHandlers(), messageConsumer);
+    return domainEventDispatcherFactory.make("orderHistoryServiceEvents",
+            orderHistoryServiceEventSubscriber.domainEventHandlers());
   }
 
 }
