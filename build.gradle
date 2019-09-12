@@ -18,6 +18,9 @@ apply plugin: WaitForMySqlPlugin
 
 
 dockerCompose {
+    environment.put "EVENTUATE_COMMON_VERSION", eventuateCommonImageVersion
+    environment.put "EVENTUATE_CDC_VERSION", eventuateCdcImageVersion
+
     tcpPortsToIgnoreWhenWaiting = [2888, 3888]
     projectName = "redisconf-2019"
     removeOrphans = true
