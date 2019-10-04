@@ -2,11 +2,13 @@ version: 2
 jobs:
   build:
     machine: true
-    working_directory: ~/eventuate-tram-examples-customers-and-orders
+    working_directory: ~/eventuate-tram-examples-customers-and-orders-redis
     steps:
       - checkout
       - restore_cache:
-          key: eventuate-tram-examples-java-spring-todo-list-{{ checksum "gradle.properties" }}
+          keys:
+            - eventuate-tram-examples-customers-and-orders-redis-{{ checksum "gradle.properties" }}
+            - eventuate-tram-examples-customers-and-orders-redis-
       - run:
           command: |
             export TERM=dumb
@@ -14,7 +16,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: eventuate-tram-examples-java-spring-todo-list-{{ checksum "gradle.properties" }}
+          key: eventuate-tram-examples-customers-and-orders-redis-{{ checksum "gradle.properties" }}
       - run:
           command: |
             ./.circleci/upgrade-docker-compose.sh
