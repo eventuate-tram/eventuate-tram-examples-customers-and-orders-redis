@@ -8,7 +8,7 @@ dependencies {
     compile project(":order-service-api-web")
 
 
-    compile "io.eventuate.tram.core:eventuate-tram-events:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-events:$eventuateTramVersion"
 
     compile "io.eventuate.tram.core:eventuate-tram-jdbc-redis:$eventuateTramVersion"
 

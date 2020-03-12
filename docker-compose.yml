@@ -81,7 +81,7 @@ services:
       - MYSQL_PASSWORD=mysqlpw
 
   redis:
-    image: redis:5.0.3
+    image: redis:5.0.7
     ports:
       - 6379:6379
 
