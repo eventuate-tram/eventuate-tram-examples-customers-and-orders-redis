@@ -1,11 +1,11 @@
 package io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.messaging;
 
 import io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.service.OrderHistoryServiceServiceConfiguration;
-import io.eventuate.tram.consumer.common.TramNoopDuplicateMessageDetectorConfiguration;
+import io.eventuate.tram.spring.consumer.common.TramNoopDuplicateMessageDetectorConfiguration;
 import io.eventuate.tram.consumer.redis.EventuateTramRedisMessageConsumerConfiguration;
 import io.eventuate.tram.events.subscriber.DomainEventDispatcher;
 import io.eventuate.tram.events.subscriber.DomainEventDispatcherFactory;
-import io.eventuate.tram.events.subscriber.TramEventSubscriberConfiguration;
+import io.eventuate.tram.spring.events.subscriber.TramEventSubscriberConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
