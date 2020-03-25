@@ -21,6 +21,9 @@ public class Order {
   @Embedded
   private OrderDetails orderDetails;
 
+  @Version
+  private Long version;
+
   public Order() {
   }
 
