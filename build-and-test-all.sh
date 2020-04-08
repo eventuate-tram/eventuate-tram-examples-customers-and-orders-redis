@@ -20,11 +20,6 @@ while [ ! -z "$*" ] ; do
   shift
 done
 
-if [ -z "$DOCKER_HOST_IP" ] ; then
-    echo must set DOCKER_HOST_IP to the IP address of your machine
-    exit 1
-fi
-
 ./gradlew $GRADLE_OPTIONS buildAndTestAll
 
 
