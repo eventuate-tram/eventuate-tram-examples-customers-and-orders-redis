@@ -1,6 +1,7 @@
-FROM openjdk:8u181-jdk-stretch
+FROM openjdk:8u252-slim-buster
 WORKDIR /development
 RUN apt-get update && \
+    apt-get install -y curl && \
     apt-get install -y jq && \
     apt-get install -y \
         apt-transport-https \
@@ -16,10 +17,11 @@ RUN apt-get update && \
   apt-get update && \
   apt-get install -y docker-ce-cli && \
   curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
-  chmod +x /usr/local/bin/docker-compose
+  chmod +x /usr/local/bin/docker-compose && \
+  rm -rf /var/lib/apt/lists/*
 
 COPY build /tmp-src
 
-RUN echo "Building in image..." && (cd /tmp-src ; ./gradlew testClasses ; cd ; rm -fr /tmp-src)
+#RUN echo "Building in image..." && (cd /tmp-src ; ./gradlew testClasses assemble ; cd ; rm -fr /tmp-src)
 
 CMD echo Ready ; sleep 260000

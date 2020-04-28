@@ -87,6 +87,13 @@ subprojects {
 
 }
 
+task testRedisCli(type:Exec) {
+    commandLine "sh", "-c", "echo keys '*' | ./redis-cli.sh -i"
+}
+
+task testMySqlCli(type:Exec) {
+    commandLine "sh", "-c", "echo 'show databases;' | ./mysql-cli.sh -i"
+}
 
 task buildAndTestAll(type: GradleBuild) {
     List<String> t = ["testClasses"]
@@ -99,6 +106,10 @@ task buildAndTestAll(type: GradleBuild) {
     t.add("infrastructureComposeUp")
     t.addAll(subprojects.collect { it.name }.findAll { it != "end-to-end-tests" }.collect { ":" + it + ":build" })
     t.add("composeUp")
+
+    t.add("testRedisCli")
+    t.add("testMySqlCli")
+
     t.addAll([":end-to-end-tests:cleanTest", ":end-to-end-tests:test"])
 
     if (project.hasProperty("buildAndTestAllKeepRunning") && buildAndTestAllKeepRunning)

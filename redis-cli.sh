@@ -1,5 +1,5 @@
 #! /bin/bash -e
 
-docker run ${DOCKER_RUN_OPTIONS:--i} --rm \
-   --network=${PWD##*/}_default \
-   redis:5.0.3 bash -c 'redis-cli -h redis'
+docker run ${1:--it} --rm \
+   --network=redisconf-2019_default \
+   redis:5.0.7 bash -c 'redis-cli -h redis'

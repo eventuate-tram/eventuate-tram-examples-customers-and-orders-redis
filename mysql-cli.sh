@@ -1,9 +1,8 @@
 #! /bin/bash -e
 
-docker run $* ${DOCKER_RUN_OPTIONS:--i} \
+docker run ${1:--it} \
    --name mysqlterm \
    --rm \
-   --network=${PWD##*/}_default \
-   -e MYSQL_HOST=mysql \
+   --network=redisconf-2019_default \
    mysql:5.7.13 \
-   sh -c 'exec mysql -h"$MYSQL_HOST"  -uroot -prootpassword -o eventuate'
+   sh -c 'exec mysql -hmysql -uroot -prootpassword -o eventuate'
