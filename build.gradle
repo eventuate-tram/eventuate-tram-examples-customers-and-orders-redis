@@ -95,6 +95,10 @@ task testMySqlCli(type:Exec) {
     commandLine "sh", "-c", "echo 'show databases;' | ./mysql-cli.sh -i"
 }
 
+task buildAndStartServices(type: GradleBuild) {
+    tasks = ["testClasses", "assemble", "composeUp"]
+}
+
 task buildAndTestAll(type: GradleBuild) {
     List<String> t = ["testClasses"]
 
