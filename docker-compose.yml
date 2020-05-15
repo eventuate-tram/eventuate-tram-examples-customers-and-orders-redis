@@ -65,7 +65,7 @@ services:
 ## Infrastructure
 
   zipkin:
-    image: openzipkin/zipkin:2.5.0
+    image: openzipkin/zipkin:2.21
     ports:
       - "9411:9411"
     environment:
