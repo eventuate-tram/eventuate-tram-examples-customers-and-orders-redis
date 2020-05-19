@@ -22,6 +22,6 @@ RUN apt-get update && \
 
 COPY build /tmp-src
 
-#RUN echo "Building in image..." && (cd /tmp-src ; ./gradlew testClasses assemble ; cd ; rm -fr /tmp-src)
+RUN echo "Building in image..." && (cd /tmp-src ; ./gradlew testClasses assemble ; cd ; rm -fr /tmp-src)
 
 CMD echo Ready ; sleep 260000
