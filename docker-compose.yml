@@ -21,7 +21,7 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
-      JAVA_OPTS: -Xmx128m
+      JAVA_OPTS: -Xmx64m
 
 
   order-service:
@@ -44,7 +44,7 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
-      JAVA_OPTS: -Xmx128m
+      JAVA_OPTS: -Xmx64m
 
   order-history-service:
     build: ./order-history-service/
@@ -60,7 +60,7 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
-      JAVA_OPTS: -Xmx128m
+      JAVA_OPTS: -Xmx64m
 
 ## Infrastructure
 
@@ -69,7 +69,7 @@ services:
     ports:
       - "9411:9411"
     environment:
-      JAVA_OPTS: -Xmx128m
+      JAVA_OPTS: -Xmx64m
 
   mysql:
     image: eventuateio/eventuate-mysql:$EVENTUATE_COMMON_VERSION
@@ -106,7 +106,7 @@ services:
       SPRING_PROFILES_ACTIVE: Redis
       EVENTUATE_REDIS_SERVERS: redis:6379
       EVENTUATE_REDIS_PARTITIONS: 2
-      JAVA_OPTS: -Xmx128m
+      JAVA_OPTS: -Xmx64m
 
 
 # Development
