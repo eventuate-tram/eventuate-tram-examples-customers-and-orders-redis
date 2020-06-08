@@ -4,16 +4,15 @@
     
     metadata:
       name: customers-and-orders
-      region: ${AWS_REGION}
+      region: ap-southeast-1
     
     managedNodeGroups:
     - name: nodegroup
       instanceType: t2.micro
       desiredCapacity: 6
-      maxPodsPerNode: 6
       iam:
         withAddonPolicies:
           albIngress: true
     vpc:
       nat:
-        gateway: HighlyAvailable # other options: Disable, Single (default)
+        gateway: Disable
