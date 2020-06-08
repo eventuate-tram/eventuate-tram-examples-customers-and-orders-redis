@@ -3,7 +3,7 @@
     kind: ClusterConfig
     
     metadata:
-      name: eksworkshop-eksctl
+      name: customers-and-orders
       region: ${AWS_REGION}
     
     managedNodeGroups:
