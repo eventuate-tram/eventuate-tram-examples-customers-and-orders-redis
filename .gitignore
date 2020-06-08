@@ -6,3 +6,8 @@ build/
 out
 .DS_Store
 gradle-home
+.classpath
+.project
+.settings
+bin/
+.gitignore
