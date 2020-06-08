@@ -1,0 +1,19 @@
+---
+    apiVersion: eksctl.io/v1alpha5
+    kind: ClusterConfig
+    
+    metadata:
+      name: eksworkshop-eksctl
+      region: ${AWS_REGION}
+    
+    managedNodeGroups:
+    - name: nodegroup
+      instanceType: t2.micro
+      desiredCapacity: 6
+      maxPodsPerNode: 6
+      iam:
+        withAddonPolicies:
+          albIngress: true
+    vpc:
+      nat:
+        gateway: HighlyAvailable # other options: Disable, Single (default)
