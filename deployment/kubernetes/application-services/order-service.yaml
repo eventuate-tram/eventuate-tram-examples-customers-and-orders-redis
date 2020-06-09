@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: order-service
-        image: eventuateexamples/eventuate-tram-examples-customers-and-orders-order-service:latest
+        image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-service:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
@@ -49,7 +49,7 @@ spec:
           - name: EVENTUATE_REDIS_SERVERS
             value: redis:6379
           - name: EVENTUATE_REDIS_PARTITIONS
-            value: 2
+            value: "2"
           - name: SPRING_PROFILES_ACTIVE
             value: Redis
           - name: SPRING_SLEUTH_ENABLED
