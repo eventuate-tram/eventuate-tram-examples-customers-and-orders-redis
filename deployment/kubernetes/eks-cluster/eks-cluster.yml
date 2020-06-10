@@ -3,13 +3,13 @@
     kind: ClusterConfig
     
     metadata:
-      name: customers-and-orders
+      name: customers-and-orders-redis
       region: ap-southeast-1
     
     managedNodeGroups:
     - name: nodegroup
       instanceType: t2.micro
-      desiredCapacity: 6
+      desiredCapacity: 7
       iam:
         withAddonPolicies:
           albIngress: true
