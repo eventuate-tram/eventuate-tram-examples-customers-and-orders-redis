@@ -4,17 +4,9 @@ variable "region" {
   default = "us-east-2"
 }
 
-variable "access_key" {
-  default = ""
-}
-
 variable "eks_cluster_name" {
   description = "Kubernetes Cluster Name"
-  default = "eventuate-redis-example"
-}
-
-variable "secret_key" {
-  default = ""
+  default     = "eventuate-redis-example"
 }
 
 variable "vpc_name" {
@@ -38,14 +30,14 @@ variable "vpc_public_subnets" {
 variable "eks_tags" {
   description = "Tags to apply to resources created by EKS module"
   type        = map(string)
-  default     = {
+  default = {
     Terraform   = "true"
     Environment = "dev"
   }
 }
 
-variable enable_dns_hostnames {
-  default = true
+variable "enable_dns_hostnames" {
+  default = "true"
 }
 
 variable "rds_username" {
@@ -65,11 +57,43 @@ variable "docdb_username" {
 }
 
 variable "enable_codepipeline" {
-  type = string
+  type    = string
   default = "false"
 }
 
 variable "docker_hub_image_prefix" {
-  type = string
+  type    = string
   default = "eventuateexamples/eventuate-tram-examples-customers-and-orders-"
+}
+
+variable "map_accounts" {
+  description = "Additional AWS account numbers to add to the aws-auth configmap. See examples/basic/variables.tf for example format."
+  type        = list(string)
+  default     = []
+}
+
+variable "map_roles" {
+  description = "Additional IAM roles to add to the aws-auth configmap."
+  type = list(object({
+    rolearn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
+
+variable "map_users" {
+  description = "Additional IAM users to add to the aws-auth configmap."
+  type = list(object({
+    userarn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = [
+    {
+      userarn  = "arn:aws:iam::957941897228:user/eks"
+      username = "eks"
+      groups   = ["system:masters"]
+    }
+  ]
 }

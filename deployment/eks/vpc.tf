@@ -1,17 +1,17 @@
 provider "aws" {
-  region  = var.region
+  region = var.region
 }
 
 data "aws_availability_zones" "available" {}
 
 module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  name                 = "vpc-eventuate"
+  source = "terraform-aws-modules/vpc/aws"
+  name   = "vpc-eventuate"
 
-  cidr                 = var.vpc_cidr
-  azs                  = data.aws_availability_zones.available.names
-  public_subnets       = var.vpc_public_subnets
-  
+  cidr           = var.vpc_cidr
+  azs            = data.aws_availability_zones.available.names
+  public_subnets = var.vpc_public_subnets
+
   enable_dns_hostnames = var.enable_dns_hostnames
 
   tags = {
@@ -20,7 +20,7 @@ module "vpc" {
 
   public_subnet_tags = {
     "kubernetes.io/cluster/${var.eks_cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                      = "1"
+    "kubernetes.io/role/elb"                        = "1"
   }
 
 }
