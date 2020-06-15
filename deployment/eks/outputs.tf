@@ -27,3 +27,7 @@ output "cluster_name" {
   description = "Kubernetes Cluster Name"
   value       = var.eks_cluster_name
 }
+
+output "mysql_endpoint" {
+  value = "${aws_db_instance.mysql_instance.endpoint}"
+}
