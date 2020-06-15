@@ -41,11 +41,11 @@ variable "enable_dns_hostnames" {
 }
 
 variable "rds_username" {
-  default = "admin"
+  default = "mysqluser"
 }
 
 variable "rds_pwd" {
-  default = "Eventuate123"
+  default = "mysqlpw"
 }
 
 variable "map_accounts" {
