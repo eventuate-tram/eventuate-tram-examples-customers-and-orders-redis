@@ -31,3 +31,7 @@ output "cluster_name" {
 output "mysql_endpoint" {
   value = "${aws_db_instance.mysql_instance.endpoint}"
 }
+
+output "redis_endpoint" {
+  value = "${aws_elasticache_cluster.redis_instance.cache_nodes.0.address}"
+}

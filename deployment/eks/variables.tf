@@ -89,11 +89,5 @@ variable "map_users" {
     username = string
     groups   = list(string)
   }))
-  default = [
-    {
-      userarn  = "arn:aws:iam::957941897228:user/eks"
-      username = "eks"
-      groups   = ["system:masters"]
-    }
-  ]
+  default = []
 }
