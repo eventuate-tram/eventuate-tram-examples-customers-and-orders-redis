@@ -45,7 +45,7 @@ variable "rds_username" {
 }
 
 variable "rds_pwd" {
-  default = "mysqlpw"
+  default = "mysqlpwd"
 }
 
 variable "map_accounts" {

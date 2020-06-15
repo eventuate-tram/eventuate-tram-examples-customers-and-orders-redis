@@ -1,10 +1,12 @@
 
 == Deployment on Kubernetes
 
-First, run Skaffold with port forwarding enabled
+Use these manifests to deploy the example on an existing Kubernetes cluster.
 
-Second, run this script:
+Apply the manifests using the below commands:
 
 ```
-USE_PORTS=1 HOST=localhost ./aws-fargate-terraform/invoke-api.sh
+kubectl apply -f namespace/
+kubectl apply -f infrastructure-services/
+kubectl apply -f eks-cluster
 ```

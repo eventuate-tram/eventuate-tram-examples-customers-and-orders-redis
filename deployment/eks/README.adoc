@@ -1,0 +1,18 @@
+
+== Deployment on EKS
+
+Use these Terraform configurations to deploy the example on EKS.
+
+=== Pre-requisites
+
+1. Install Terraform
+2. Install mysqlsh and include it in $PATH
+
+=== Pre-requisites
+
+Apply the manifests using the below commands:
+
+```
+terraform init
+terraform apply
+```
