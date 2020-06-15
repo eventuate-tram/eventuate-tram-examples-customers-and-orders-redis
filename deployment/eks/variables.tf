@@ -48,26 +48,8 @@ variable "rds_pwd" {
   default = "Eventuate123"
 }
 
-variable "prefix" {
-  default = "dev"
-}
-
-variable "docdb_username" {
-  default = "eventuateadmin"
-}
-
-variable "enable_codepipeline" {
-  type    = string
-  default = "false"
-}
-
-variable "docker_hub_image_prefix" {
-  type    = string
-  default = "eventuateexamples/eventuate-tram-examples-customers-and-orders-"
-}
-
 variable "map_accounts" {
-  description = "Additional AWS account numbers to add to the aws-auth configmap. See examples/basic/variables.tf for example format."
+  description = "Additional AWS account numbers to add to the aws-auth configmap."
   type        = list(string)
   default     = []
 }

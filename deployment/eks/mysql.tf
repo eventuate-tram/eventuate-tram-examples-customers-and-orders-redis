@@ -1,6 +1,6 @@
 resource "aws_db_instance" "mysql_instance" {
   name                    = "eventuate"
-  identifier              = "${var.prefix}-eventuate-rds"
+  identifier              = "eventuate-rds"
   allocated_storage       = 20
   storage_type            = "gp2"
   port                    = 3306
@@ -28,7 +28,7 @@ resource "aws_db_instance" "mysql_instance" {
 
 resource "aws_db_parameter_group" "mysql_parameter_group" {
   family = "mysql5.7"
-  name   = "${var.prefix}-mysql-cdc"
+  name   = "eventuate-mysql-cdc"
 
   parameter {
     name  = "binlog_format"
@@ -37,7 +37,7 @@ resource "aws_db_parameter_group" "mysql_parameter_group" {
 }
 
 resource "aws_security_group" "eventuate-rds" {
-  name        = "${var.prefix}-sg-eventuate-rds"
+  name        = "eventuate-rds-sg"
   description = "RDS security group"
 
   vpc_id = module.vpc.vpc_id
@@ -54,7 +54,7 @@ resource "aws_security_group" "eventuate-rds" {
     to_port   = 3306
     protocol  = "tcp"
 
-    security_groups = [aws_security_group.eventuate-node-group.id]
+    security_groups = [aws_security_group.eventuate-sg.id]
 
     cidr_blocks = [
       var.vpc_cidr,
