@@ -1,4 +1,4 @@
-resource "kubernetes_service" "cdc-service" {
+resource "kubernetes_service" "cdc_service" {
   metadata {
     name      = "cdc-service"
     namespace = kubernetes_namespace.cao.metadata.0.name
@@ -16,7 +16,7 @@ resource "kubernetes_service" "cdc-service" {
   }
 }
 
-resource "kubernetes_deployment" "cdc-service" {
+resource "kubernetes_deployment" "cdc_service" {
   metadata {
     name      = "cdc-service"
     namespace = kubernetes_namespace.cao.metadata.0.name

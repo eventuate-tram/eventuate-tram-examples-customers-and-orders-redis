@@ -55,7 +55,7 @@ locals {
   )
 }
 
-resource "kubernetes_config_map" "customer-service-container" {
+resource "kubernetes_config_map" "customer_service_container" {
   count = var.use_rds_and_elastic_cache ? 0 : 1
   metadata {
     name = "customer-service"
@@ -64,7 +64,7 @@ resource "kubernetes_config_map" "customer-service-container" {
   data = local.cao_container_env
 }
 
-resource "kubernetes_config_map" "customer-service-managed" {
+resource "kubernetes_config_map" "customer_service_managed" {
   count = var.use_rds_and_elastic_cache ? 1 : 0
   metadata {
     name = "customer-service"
@@ -73,7 +73,7 @@ resource "kubernetes_config_map" "customer-service-managed" {
   data = local.cao_managed_env
 }
 
-resource "kubernetes_config_map" "order-service-container" {
+resource "kubernetes_config_map" "order_service_container" {
   count = var.use_rds_and_elastic_cache ? 0 : 1
   metadata {
     name = "order-service"
@@ -82,7 +82,7 @@ resource "kubernetes_config_map" "order-service-container" {
   data = local.cao_container_env
 }
 
-resource "kubernetes_config_map" "order-service-managed" {
+resource "kubernetes_config_map" "order_service_managed" {
   count = var.use_rds_and_elastic_cache ? 1 : 0
   metadata {
     name = "order-service"
@@ -100,7 +100,7 @@ resource "kubernetes_config_map" "order-history-service-container" {
   data = local.cao_container_env
 }
 
-resource "kubernetes_config_map" "order-history-service-managed" {
+resource "kubernetes_config_map" "order_history_service_managed" {
   count = var.use_rds_and_elastic_cache ? 1 : 0
   metadata {
     name = "order-history-service"
@@ -109,7 +109,7 @@ resource "kubernetes_config_map" "order-history-service-managed" {
   data = local.cao_managed_env
 }
 
-resource "kubernetes_config_map" "cdc-service-container" {
+resource "kubernetes_config_map" "cdc_service_container" {
   count = var.use_rds_and_elastic_cache ? 0 : 1
   metadata {
     name = "cdc-service"
@@ -118,7 +118,7 @@ resource "kubernetes_config_map" "cdc-service-container" {
   data = local.cdc_container_env
 }
 
-resource "kubernetes_config_map" "cdc-service-managed" {
+resource "kubernetes_config_map" "cdc_service_managed" {
   count = var.use_rds_and_elastic_cache ? 1 : 0
   metadata {
     name = "cdc-service"

@@ -1,4 +1,4 @@
-resource "kubernetes_service" "customer-service" {
+resource "kubernetes_service" "customer_service" {
   metadata {
     name      = "customer-service"
     namespace = kubernetes_namespace.cao.metadata.0.name
@@ -16,7 +16,7 @@ resource "kubernetes_service" "customer-service" {
   }
 }
 
-resource "kubernetes_deployment" "customer-service" {
+resource "kubernetes_deployment" "customer_service" {
   metadata {
     name      = "customer-service"
     namespace = kubernetes_namespace.cao.metadata.0.name

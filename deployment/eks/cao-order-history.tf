@@ -1,4 +1,4 @@
-resource "kubernetes_service" "order-history-service" {
+resource "kubernetes_service" "order_history_service" {
   metadata {
     name      = "order-history-service"
     namespace = kubernetes_namespace.cao.metadata.0.name
@@ -16,7 +16,7 @@ resource "kubernetes_service" "order-history-service" {
   }
 }
 
-resource "kubernetes_deployment" "order-history-service" {
+resource "kubernetes_deployment" "order_history_service" {
   metadata {
     name      = "order-history-service"
     namespace = kubernetes_namespace.cao.metadata.0.name

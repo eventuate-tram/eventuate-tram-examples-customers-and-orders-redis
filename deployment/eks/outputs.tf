@@ -35,3 +35,19 @@ output "mysql_endpoint" {
 output "redis_endpoint" {
   value = "${aws_elasticache_cluster.redis_instance.cache_nodes.0.address}"
 }
+
+output "customer_service" {
+  value = "http://${kubernetes_service.customer_service.load_balancer_ingress[0].hostname}:8080/swagger-ui.html"
+}
+
+output "order_service" {
+  value = "http://${kubernetes_service.order_service.load_balancer_ingress[0].hostname}:8080/swagger-ui.html"
+}
+
+output "order_history_service" {
+  value = "http://${kubernetes_service.order_history_service.load_balancer_ingress[0].hostname}:8080/swagger-ui.html"
+}
+
+output "zipkin" {
+  value = "http://${kubernetes_service.zipkin.load_balancer_ingress[0].hostname}:9411/"
+}
