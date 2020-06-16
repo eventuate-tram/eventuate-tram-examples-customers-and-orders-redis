@@ -21,7 +21,7 @@ module "eks" {
       name                          = "eventuate-node-group"
       instance_type                 = "t2.micro"
       additional_userdata           = "echo foo bar"
-      asg_desired_capacity          = 5
+      asg_desired_capacity          = 6
       asg_max_size                  = 6
       asg_min_size                  = 4
       additional_security_group_ids = [aws_security_group.eventuate-sg.id]

@@ -1,7 +1,7 @@
 resource "aws_db_instance" "mysql_instance" {
   name                    = "eventuate"
   identifier              = "eventuate-rds"
-  allocated_storage       = 20
+  allocated_storage       = 5
   storage_type            = "gp2"
   port                    = 3306
   instance_class          = "db.t2.micro"

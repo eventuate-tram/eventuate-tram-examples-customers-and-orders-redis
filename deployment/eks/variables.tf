@@ -40,6 +40,10 @@ variable "enable_dns_hostnames" {
   default = "true"
 }
 
+variable "use_rds_and_elastic_cache" {
+  default = "false"
+}
+
 variable "rds_username" {
   default = "mysqluser"
 }
