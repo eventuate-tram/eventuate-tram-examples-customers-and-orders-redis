@@ -14,7 +14,6 @@ resource "kubernetes_service" "redis" {
       port        = 6379
       target_port = 6379
     }
-    type = "LoadBalancer"
   }
 }
 

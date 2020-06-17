@@ -1,32 +1,38 @@
 resource "aws_db_instance" "mysql_instance" {
-  name                    = "eventuate"
-  identifier              = "eventuate-rds"
-  allocated_storage       = 5
-  storage_type            = "gp2"
-  port                    = 3306
-  instance_class          = "db.t2.micro"
-  engine                  = "MySQL"
-  engine_version          = "5.7.22"
-  availability_zone       = data.aws_availability_zones.available.names[0]
-  username                = var.rds_username
-  password                = var.rds_pwd
-  db_subnet_group_name    = aws_db_subnet_group.rds-subnet.name
-  skip_final_snapshot     = "true"
-  publicly_accessible     = "true"
-  parameter_group_name    = aws_db_parameter_group.mysql_parameter_group.name
-  vpc_security_group_ids  = [aws_security_group.eventuate-rds.id]
+  count = var.use_rds_and_elastic_cache ? 1 : 0
+
+  name                 = "eventuate"
+  identifier           = "eventuate-rds"
+  allocated_storage    = 5
+  storage_type         = "gp2"
+  port                 = 3306
+  instance_class       = "db.t2.micro"
+  engine               = "MySQL"
+  engine_version       = "5.7.22"
+  availability_zone    = data.aws_availability_zones.available.names[0]
+  username             = var.rds_username
+  password             = var.rds_pwd
+  db_subnet_group_name = aws_db_subnet_group.rds-subnet[count.index].name
+  skip_final_snapshot  = "true"
+  publicly_accessible  = "true"
+  parameter_group_name = aws_db_parameter_group.mysql_parameter_group[count.index].name
+  vpc_security_group_ids = [
+    aws_security_group.eventuate-rds[count.index].id
+  ]
   backup_retention_period = "1"
   apply_immediately       = "true"
 
   provisioner "local-exec" {
     command = <<EOF
-        mysqlsh --user=${aws_db_instance.mysql_instance.username} --password=${aws_db_instance.mysql_instance.password} --host ${aws_db_instance.mysql_instance.address} --sql  < 1.initialize-database.sql;
-        mysqlsh --user=${aws_db_instance.mysql_instance.username} --password=${aws_db_instance.mysql_instance.password} --host ${aws_db_instance.mysql_instance.address} --sql  < 2.initialize-database.sql
+		    mysqlsh --user=${aws_db_instance.mysql_instance[count.index].username} --password=${aws_db_instance.mysql_instance[count.index].password} --host ${aws_db_instance.mysql_instance[count.index].address} --sql  < 1.initialize-database.sql;
+        mysqlsh --user=${aws_db_instance.mysql_instance[count.index].username} --password=${aws_db_instance.mysql_instance[count.index].password} --host ${aws_db_instance.mysql_instance[count.index].address} --sql  < 2.initialize-database.sql
         EOF
   }
 }
 
 resource "aws_db_parameter_group" "mysql_parameter_group" {
+  count = var.use_rds_and_elastic_cache ? 1 : 0
+
   family = "mysql5.7"
   name   = "eventuate-mysql-cdc"
 
@@ -37,6 +43,8 @@ resource "aws_db_parameter_group" "mysql_parameter_group" {
 }
 
 resource "aws_security_group" "eventuate-rds" {
+  count = var.use_rds_and_elastic_cache ? 1 : 0
+
   name        = "eventuate-rds-sg"
   description = "RDS security group"
 
@@ -79,5 +87,6 @@ resource "aws_security_group" "eventuate-rds" {
 }
 
 resource "aws_db_subnet_group" "rds-subnet" {
+  count      = var.use_rds_and_elastic_cache ? 1 : 0
   subnet_ids = module.vpc.public_subnets
 }

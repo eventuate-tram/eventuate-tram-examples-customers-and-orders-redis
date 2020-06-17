@@ -12,7 +12,6 @@ resource "kubernetes_service" "cdc_service" {
       port        = 8080
       target_port = 8080
     }
-    type = "LoadBalancer"
   }
 }
 
@@ -47,9 +46,33 @@ resource "kubernetes_deployment" "cdc_service" {
           port {
             container_port = 8080
           }
+
+          dynamic "env" {
+            for_each = {
+              for key, value in local.cdc_container_env :
+              key => value
+              if var.use_rds_and_elastic_cache == "false"
+            }
+            content {
+              name  = env.key
+              value = env.value
+            }
+          }
+          dynamic "env" {
+            for_each = {
+              for key, value in local.cdc_managed_env :
+              key => value
+              if var.use_rds_and_elastic_cache == "true"
+            }
+            content {
+              name  = env.key
+              value = env.value
+            }
+          }
+
           liveness_probe {
             http_get {
-              path = "/health"
+              path = "/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 120
@@ -57,7 +80,7 @@ resource "kubernetes_deployment" "cdc_service" {
           }
           readiness_probe {
             http_get {
-              path = "/health"
+              path = "/actuator/health"
               port = 8080
             }
             initial_delay_seconds = 120

@@ -1,4 +1,6 @@
 resource "aws_elasticache_cluster" "redis_instance" {
+  count = var.use_rds_and_elastic_cache ? 1 : 0
+
   cluster_id           = "eventuate-cache"
   engine               = "redis"
   node_type            = "cache.t2.micro"
@@ -7,12 +9,16 @@ resource "aws_elasticache_cluster" "redis_instance" {
   engine_version       = "5.0.6"
   port                 = 6379
 
-  security_group_ids = [aws_security_group.eventuate-cache.id]
-  subnet_group_name  = aws_elasticache_subnet_group.cache-subnet-group.name
+  security_group_ids = [
+    aws_security_group.eventuate-cache[count.index].id
+  ]
+  subnet_group_name = aws_elasticache_subnet_group.cache-subnet-group[count.index].name
 
 }
 
 resource "aws_security_group" "eventuate-cache" {
+  count = var.use_rds_and_elastic_cache ? 1 : 0
+
   name        = "eventuate-cache-sg"
   description = "Cache security group"
 
@@ -55,6 +61,8 @@ resource "aws_security_group" "eventuate-cache" {
 }
 
 resource "aws_elasticache_subnet_group" "cache-subnet-group" {
+  count = var.use_rds_and_elastic_cache ? 1 : 0
+
   name       = "eventuate-cache-subnet-group"
   subnet_ids = module.vpc.public_subnets
 }

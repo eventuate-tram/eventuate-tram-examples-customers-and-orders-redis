@@ -28,12 +28,12 @@ output "cluster_name" {
   value       = var.eks_cluster_name
 }
 
-output "mysql_endpoint" {
-  value = "${aws_db_instance.mysql_instance.endpoint}"
+output "managed_mysql_endpoint" {
+  value = var.use_rds_and_elastic_cache ? "${aws_db_instance.mysql_instance[0].endpoint}" : ""
 }
 
-output "redis_endpoint" {
-  value = "${aws_elasticache_cluster.redis_instance.cache_nodes.0.address}"
+output "managed_redis_endpoint" {
+  value = var.use_rds_and_elastic_cache ? "${aws_elasticache_cluster.redis_instance[0].cache_nodes.0.address}" : ""
 }
 
 output "customer_service" {

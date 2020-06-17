@@ -61,11 +61,11 @@ resource "kubernetes_stateful_set" "mysql" {
           }
           env {
             name  = "MYSQL_USER"
-            value = "mysqluser"
+            value = var.rds_username
           }
           env {
             name  = "MYSQL_PASSWORD"
-            value = "mysqlpw"
+            value = var.rds_pwd
           }
 
           volume_mount {
@@ -84,9 +84,7 @@ resource "kubernetes_stateful_set" "mysql" {
       }
 
       spec {
-        access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "standard"
-
+        access_modes = ["ReadWriteOnce"]
         resources {
           requests = {
             storage = "256Mi"

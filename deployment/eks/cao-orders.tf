@@ -47,9 +47,32 @@ resource "kubernetes_deployment" "order_service" {
           port {
             container_port = 8080
           }
+
+          dynamic "env" {
+            for_each = {
+              for key, value in local.cao_container_env :
+              key => value
+              if var.use_rds_and_elastic_cache == "false"
+            }
+            content {
+              name  = env.key
+              value = env.value
+            }
+          }
+          dynamic "env" {
+            for_each = {
+              for key, value in local.cao_managed_env :
+              key => value
+              if var.use_rds_and_elastic_cache == "true"
+            }
+            content {
+              name  = env.key
+              value = env.value
+            }
+          }
           liveness_probe {
             http_get {
-              path = "/health"
+              path = "/actuator/health"
               port = 8080
             }
             period_seconds    = 20
@@ -57,7 +80,7 @@ resource "kubernetes_deployment" "order_service" {
           }
           readiness_probe {
             http_get {
-              path = "/health"
+              path = "/actuator/health"
               port = 8080
             }
             period_seconds    = 20
