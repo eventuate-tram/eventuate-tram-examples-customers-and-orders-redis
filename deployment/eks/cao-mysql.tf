@@ -49,7 +49,7 @@ resource "kubernetes_stateful_set" "mysql" {
         termination_grace_period_seconds = 10
         container {
           name              = "mysql"
-          image             = "eventuateio/eventuate-mysql"
+          image             = "eventuateio/eventuate-mysql:latest"
           image_pull_policy = "IfNotPresent"
           port {
             container_port = 3306
@@ -75,6 +75,10 @@ resource "kubernetes_stateful_set" "mysql" {
           }
         }
       }
+    }
+
+    update_strategy {
+      type = "RollingUpdate"
     }
 
     volume_claim_template {

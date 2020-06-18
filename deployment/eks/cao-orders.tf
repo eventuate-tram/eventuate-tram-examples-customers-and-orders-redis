@@ -17,6 +17,14 @@ resource "kubernetes_service" "order_service" {
 }
 
 resource "kubernetes_deployment" "order_service" {
+  depends_on = [
+    aws_db_instance.mysql_instance,
+    kubernetes_stateful_set.mysql,
+    aws_elasticache_cluster.redis_instance,
+    kubernetes_deployment.redis,
+    kubernetes_deployment.cdc_service
+  ]
+
   metadata {
     name      = "order-service"
     namespace = kubernetes_namespace.cao.metadata.0.name
@@ -40,6 +48,22 @@ resource "kubernetes_deployment" "order_service" {
       }
 
       spec {
+        init_container {
+          name    = "init-rdb"
+          image   = "busybox:1.31"
+          command = ["sh", "-c", "until nslookup ${local.rdb_host}; do echo waiting for ${local.rdb_host}; sleep 2; done;"]
+        }
+        init_container {
+          name    = "init-cache"
+          image   = "busybox:1.31"
+          command = ["sh", "-c", "until nslookup ${local.cache_endpoint}; do echo waiting for ${local.cache_endpoint}; sleep 2; done;"]
+        }
+        init_container {
+          name    = "init-cdc"
+          image   = "busybox:1.31"
+          command = ["sh", "-c", "until nslookup ${local.cdc_endpoint}; do echo waiting for ${local.cdc_endpoint}; sleep 2; done;"]
+        }
+
         container {
           image             = "eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-service:latest"
           name              = "order-service"
@@ -49,27 +73,13 @@ resource "kubernetes_deployment" "order_service" {
           }
 
           dynamic "env" {
-            for_each = {
-              for key, value in local.cao_container_env :
-              key => value
-              if var.use_rds_and_elastic_cache == "false"
-            }
+            for_each = local.app_env
             content {
               name  = env.key
               value = env.value
             }
           }
-          dynamic "env" {
-            for_each = {
-              for key, value in local.cao_managed_env :
-              key => value
-              if var.use_rds_and_elastic_cache == "true"
-            }
-            content {
-              name  = env.key
-              value = env.value
-            }
-          }
+
           liveness_probe {
             http_get {
               path = "/actuator/health"
