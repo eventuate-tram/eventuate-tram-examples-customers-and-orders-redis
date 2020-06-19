@@ -28,6 +28,11 @@ output "cluster_name" {
   value       = var.eks_cluster_name
 }
 
+output "namespace" {
+  description = "Kubernetes Namespace"
+  value       = var.cao_namespace
+}
+
 output "rdb_endpoint" {
   value = var.use_rds_and_elastic_cache ? aws_db_instance.mysql_instance[0].endpoint : kubernetes_service.mysql[0].metadata.0.name
 }

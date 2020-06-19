@@ -12,7 +12,8 @@ module "eks" {
     {
       name                          = "eventuate-node-group"
       instance_type                 = "t2.micro"
-      additional_userdata           = "echo foo bar"
+      root_volume_size              = 4
+      root_iops                     = 100
       asg_desired_capacity          = 6
       asg_max_size                  = 6
       asg_min_size                  = 4
@@ -27,11 +28,11 @@ module "eks" {
 }
 
 data "aws_eks_cluster" "cluster" {
-  name = var.eks_cluster_name
+  name = module.eks.cluster_id
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = var.eks_cluster_name
+  name = module.eks.cluster_id
 }
 
 provider "kubernetes" {

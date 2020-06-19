@@ -1,18 +1,89 @@
 
 == Deployment on EKS
 
-Use these Terraform configurations to deploy the example on EKS.
+The Terraform configurations can be used to deploy the Eventuate example on EKS. You can choose to either run MySql and Redis as containers within the EKS cluster or use AWS RDS and Elastic Cache.
+
+AWS resources used:
+- 6 t2.micro EC2 instances for the EKS worker nodes
+- 4 GiB of 'gp2' EBS volume for each of the 6 worker nodes
+
+If MySql and Redis are run in containers
+- 1 GiB of 'gp2' EBS volume as Persistent Volume Claim for MySql
+
+If managed RDS and Elastic Cache are used
+- 1 t2.micro with 5 GiB for RDS
+- 1 t2.micro for Elastic Cache
+
 
 === Pre-requisites
 
-1. Install Terraform
-2. Install mysqlsh and include it in $PATH
+1. AWS CLI - https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
+2. kubectl - https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
+3. Terraform - https://learn.hashicorp.com/terraform/getting-started/install.html
+4. mysqlsh and include it in $PATH - https://dev.mysql.com/downloads/shell/
 
-=== Pre-requisites
+
+=== Setup
 
 Apply the manifests using the below commands:
 
 ```
+
+aws configure
+
+cd deployment/eks
+
 terraform init
+
 terraform apply
+OR
+terraform apply -var="use_rds_and_elastic_cache=true"
+
+aws eks --region us-east-2 update-kubeconfig --name eventuate-redis-example
+
 ```
+
+
+=== Variables and Defaults
+
+| Variable                  | Description               | Default                                      |
+| -------------             | -------------             | -------------                                |
+| region                    | AWS Region                | us-east-2                                    |
+| eks_cluster_name          | Kubernetes Cluster Name   | eventuate-redis-example                      |
+| cao_namespace             | Kubernetes Namespace      | eventuate-tram-examples-customers-and-orders |
+| use_rds_and_elastic_cache | Use RDS and Elastic Cache | false                                        |
+| rds_username              | RDS Username              | mysqluser                                    |
+| rds_pwd                   | RDS Password              | mysqlpwd                                     |
+
+
+=== Troubleshoot
+
+1. kubectl keeps erroring out with "error: You must be logged in to the server (Unauthorized)"
+Make sure AWS CLI is configured with the same IAM user credentials provided during "aws configure" executed before the creation of the cluster.
+If everything looks ok and the error doesn't go away then try exporting AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. This has been seen in Cloud9 environments.
+
+```
+export AWS_ACCESS_KEY_ID=<your key>
+export AWS_SECRET_ACCESS_KEY=<your key>
+```
+
+
+=== Cleanup
+
+```
+
+terraform destroy
+OR
+terraform destroy -var="use_rds_and_elastic_cache=true"
+
+```
+
+Use AWS Console to make sure that you do not have any of the following infra lingering around!
+
+- EKS - eventuate-redis-example
+- VPC - eventuate-vpc
+
+- EBS - any volume tied to eventuate-redis-example-eventuate-node-group*
+
+- RDS - eventuate-rds
+- Elastic Cache - eventuate-cache
