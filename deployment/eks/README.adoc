@@ -3,16 +3,13 @@
 
 The Terraform configurations can be used to deploy the Eventuate example on EKS. You can choose to either run MySql and Redis as containers within the EKS cluster or use AWS RDS and Elastic Cache.
 
-AWS resources used:
-- 6 t2.micro EC2 instances for the EKS worker nodes
-- 4 GiB of 'gp2' EBS volume for each of the 6 worker nodes
+AWS resources used:  
 
-If MySql and Redis are run in containers
-- 1 GiB of 'gp2' EBS volume as Persistent Volume Claim for MySql
-
-If managed RDS and Elastic Cache are used
-- 1 t2.micro with 5 GiB for RDS
-- 1 t2.micro for Elastic Cache
+1. 6 t2.micro EC2 instances for the EKS worker nodes  
+2. 4 GiB of 'gp2' EBS volume for each of the 6 worker nodes  
+3. 1 GiB of 'gp2' EBS volume as Persistent Volume Claim for MySql (if MySql and Redis are run in containers)  
+4. 1 t2.micro with 5 GiB for RDS (if managed RDS and Elastic Cache are used)
+5. 1 t2.micro for Elastic Cache (if managed RDS and Elastic Cache are used)
 
 
 === Pre-requisites
@@ -45,15 +42,15 @@ aws eks --region us-east-2 update-kubeconfig --name eventuate-redis-example
 
 
 === Variables and Defaults
-
-| Variable                  | Description               | Default                                      |
-| -------------             | -------------             | -------------                                |
-| region                    | AWS Region                | us-east-2                                    |
-| eks_cluster_name          | Kubernetes Cluster Name   | eventuate-redis-example                      |
-| cao_namespace             | Kubernetes Namespace      | eventuate-tram-examples-customers-and-orders |
-| use_rds_and_elastic_cache | Use RDS and Elastic Cache | false                                        |
-| rds_username              | RDS Username              | mysqluser                                    |
-| rds_pwd                   | RDS Password              | mysqlpwd                                     |
+  
+   Variable                    Description                 Default  
+   ---------------------------------------------------------------- 
+1. region                      AWS Region                  us-east-2  
+2. eks_cluster_name            Kubernetes Cluster Name     eventuate-redis-example  
+3. cao_namespace               Kubernetes Namespace        eventuate-tram-examples-customers-and-orders
+4. use_rds_and_elastic_cache   Use RDS and Elastic Cache   false
+5. rds_username                RDS Username                mysqluser 
+6. rds_pwd                     RDS Password                mysqlpwd    
 
 
 === Troubleshoot
