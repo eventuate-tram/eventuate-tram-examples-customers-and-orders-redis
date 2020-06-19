@@ -8,5 +8,5 @@ Apply the manifests using the below commands:
 ```
 kubectl apply -f namespace/
 kubectl apply -f infrastructure-services/
-kubectl apply -f eks-cluster
+kubectl apply -f application-services/
 ```

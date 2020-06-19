@@ -3,7 +3,7 @@ locals {
   rdb_endpoint   = var.use_rds_and_elastic_cache ? aws_db_instance.mysql_instance[0].endpoint : kubernetes_service.mysql[0].metadata.0.name
   cache_endpoint = var.use_rds_and_elastic_cache ? aws_elasticache_cluster.redis_instance[0].cache_nodes.0.address : kubernetes_service.redis[0].metadata.0.name
   cdc_endpoint   = kubernetes_service.cdc_service.metadata.0.name
-  
+
   rdb_host = var.use_rds_and_elastic_cache ? split(":", aws_db_instance.mysql_instance[0].endpoint)[0] : kubernetes_service.mysql[0].metadata.0.name
 
   app_env = {

@@ -9,6 +9,11 @@ variable "eks_cluster_name" {
   default     = "eventuate-redis-example"
 }
 
+variable "cao_namespace" {
+  description = "Kubernetes Namespace"
+  default     = "eventuate-tram-examples-customers-and-orders"
+}
+
 variable "vpc_name" {
   description = "Name of VPC"
   type        = string
