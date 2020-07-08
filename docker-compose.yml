@@ -3,6 +3,7 @@ services:
 
   customer-service:
     build: ./customer-service/
+    image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-customer-service
     ports:
       - "8081:8080"
     depends_on:
@@ -26,6 +27,7 @@ services:
 
   order-service:
     build: ./order-service/
+    image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-service
     ports:
       - "8082:8080"
     depends_on:
@@ -48,6 +50,7 @@ services:
 
   order-history-service:
     build: ./order-history-service/
+    image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-history-service
     ports:
       - "8083:8080"
     depends_on:

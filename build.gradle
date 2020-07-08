@@ -99,12 +99,17 @@ task buildAndStartServices(type: GradleBuild) {
     tasks = ["testClasses", "assemble", "composeUp"]
 }
 
+
+task cleanupBeforeStarting(type: GradleBuild) {
+    tasks = ["composeDown"]
+}
+
 task buildAndTestAll(type: GradleBuild) {
     List<String> t = ["testClasses"]
 
-    if (!(project.hasProperty("buildAndTestAllUseExisting") && buildAndTestAllUseExisting))
-        t.add("composeDown")
-    else
+    if (!project.hasProperty("buildAndTestAllUseExisting") || !buildAndTestAllUseExisting) {
+        t.add("cleanupBeforeStarting")
+    } else
         println "Using existing containers"
 
     t.add("infrastructureComposeUp")
@@ -116,10 +121,10 @@ task buildAndTestAll(type: GradleBuild) {
 
     t.addAll([":end-to-end-tests:cleanTest", ":end-to-end-tests:test"])
 
-    if (project.hasProperty("buildAndTestAllKeepRunning") && buildAndTestAllKeepRunning)
-        println "Containers left running"
+    if (!project.hasProperty("buildAndTestAllKeepRunning") || !buildAndTestAllKeepRunning)
+      t.add("composeDown")
     else
-        t.add("composeDown")
+      println "Containers left running"
 
     tasks = t
 }

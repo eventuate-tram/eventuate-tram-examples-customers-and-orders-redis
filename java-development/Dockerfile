@@ -1,7 +1,6 @@
-FROM openjdk:8u252-slim-buster
+FROM eventuateio/eventuate-examples-docker-images-java-example-base-image:BUILD-5
 WORKDIR /development
 RUN apt-get update && \
-    apt-get install -y curl && \
     apt-get install -y jq && \
     apt-get install -y \
         apt-transport-https \
@@ -22,6 +21,6 @@ RUN apt-get update && \
 
 COPY build /tmp-src
 
-#RUN echo "Building in image..." && (cd /tmp-src ; ./gradlew testClasses assemble ; cd ; rm -fr /tmp-src)
+RUN echo "Building in image..." && (cd /tmp-src ; ./gradlew testClasses assemble ; cd ; rm -fr /tmp-src)
 
 CMD echo Ready ; sleep 260000
