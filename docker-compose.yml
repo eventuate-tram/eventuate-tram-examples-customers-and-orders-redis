@@ -1,7 +1,16 @@
-version: '3'
+version: '3.4'
+
+x-logging:
+  &loki-logging
+    driver: loki
+    options:
+      loki-url: "http://localhost:3100/loki/api/v1/push"
+      
+
 services:
 
   customer-service:
+    logging: *loki-logging
     build: ./customer-service/
     ports:
       - "8081:8080"
@@ -9,7 +18,7 @@ services:
       - mysql
       - redis
       - cdc-service
-      - zipkin
+      - grafana
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
       SPRING_DATASOURCE_USERNAME: mysqluser
@@ -25,6 +34,7 @@ services:
 
 
   order-service:
+    logging: *loki-logging
     build: ./order-service/
     ports:
       - "8082:8080"
@@ -32,7 +42,7 @@ services:
       - mysql
       - redis
       - cdc-service
-      - zipkin
+      - grafana
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
       SPRING_DATASOURCE_USERNAME: mysqluser
@@ -47,12 +57,13 @@ services:
       JAVA_OPTS: -Xmx128m
 
   order-history-service:
+    logging: *loki-logging
     build: ./order-history-service/
     ports:
       - "8083:8080"
     depends_on:
       - redis
-      - zipkin
+      - grafana
     environment:
       EVENTUATE_REDIS_SERVERS: redis:6379
       EVENTUATE_REDIS_PARTITIONS: 2
@@ -65,6 +76,7 @@ services:
 ## Infrastructure
 
   zipkin:
+    logging: *loki-logging
     image: openzipkin/zipkin:2.21
     ports:
       - "9411:9411"
@@ -72,6 +84,7 @@ services:
       JAVA_OPTS: -Xmx128m
 
   mysql:
+    logging: *loki-logging
     image: eventuateio/eventuate-mysql:$EVENTUATE_COMMON_VERSION
     ports:
       - 3306:3306
@@ -81,11 +94,13 @@ services:
       - MYSQL_PASSWORD=mysqlpw
 
   redis:
+    logging: *loki-logging
     image: redis:5.0.7
     ports:
       - 6379:6379
 
   cdc-service:
+    logging: *loki-logging
     image: eventuateio/eventuate-cdc-service:$EVENTUATE_CDC_VERSION
     ports:
       - "8099:8080"
@@ -109,6 +124,43 @@ services:
       JAVA_OPTS: -Xmx128m
 
 
+## Observability
+
+  loki:
+    logging: *loki-logging
+    image: grafana/loki:1.5.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  prometheus:
+    logging: *loki-logging
+    image: prom/prometheus:v2.1.0
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ${HOST_WORKING_DIR}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    environment:
+      HOST_WORKING_DIR: "${PWD}"
+
+  grafana:
+    logging: *loki-logging
+    depends_on:
+      - loki
+      - prometheus
+      - zipkin
+    image: grafana/grafana:master
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${HOST_WORKING_DIR}/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ${HOST_WORKING_DIR}/grafana/grafana.ini:/etc/grafana/grafana.ini
+    environment:
+      HOST_WORKING_DIR: "${PWD}"
+
+
 # Development
 
   java-development:
@@ -127,3 +179,4 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+      HOST_WORKING_DIR: "${PWD}"
