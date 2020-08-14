@@ -37,20 +37,32 @@ output "rdb_endpoint" {
   value = var.use_rds_and_elastic_cache ? aws_db_instance.mysql_instance[0].endpoint : kubernetes_service.mysql[0].metadata.0.name
 }
 
-output "cache_endpoint" {
+output "redis_endpoint" {
   value = var.use_rds_and_elastic_cache ? aws_elasticache_cluster.redis_instance[0].cache_nodes.0.address : kubernetes_service.redis[0].metadata.0.name
 }
 
-output "customer_service" {
+output "customer_service_ui" {
   value = "http://${kubernetes_service.customer_service.load_balancer_ingress[0].hostname}:8080/swagger-ui.html"
 }
 
-output "order_service" {
+output "order_service_ui" {
   value = "http://${kubernetes_service.order_service.load_balancer_ingress[0].hostname}:8080/swagger-ui.html"
 }
 
-output "order_history_service" {
+output "order_history_service_ui" {
   value = "http://${kubernetes_service.order_history_service.load_balancer_ingress[0].hostname}:8080/swagger-ui.html"
+}
+
+output "customer_service_host" {
+  value = "${kubernetes_service.customer_service.load_balancer_ingress[0].hostname}:8080"
+}
+
+output "order_service_host" {
+  value = "${kubernetes_service.order_service.load_balancer_ingress[0].hostname}:8080"
+}
+
+output "order_history_service_host" {
+  value = "${kubernetes_service.order_history_service.load_balancer_ingress[0].hostname}:8080"
 }
 
 output "zipkin" {

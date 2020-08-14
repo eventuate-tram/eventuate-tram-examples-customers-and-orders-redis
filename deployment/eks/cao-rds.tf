@@ -1,7 +1,6 @@
 resource "aws_db_instance" "mysql_instance" {
   count = var.use_rds_and_elastic_cache ? 1 : 0
 
-  name                 = "eventuate"
   identifier           = "eventuate-rds"
   allocated_storage    = 5
   storage_type         = "gp2"
@@ -24,9 +23,17 @@ resource "aws_db_instance" "mysql_instance" {
 
   provisioner "local-exec" {
     command = <<EOF
-		    mysqlsh --user=${aws_db_instance.mysql_instance[count.index].username} --password=${aws_db_instance.mysql_instance[count.index].password} --host ${aws_db_instance.mysql_instance[count.index].address} --sql  < 1.initialize-database.sql;
-        mysqlsh --user=${aws_db_instance.mysql_instance[count.index].username} --password=${aws_db_instance.mysql_instance[count.index].password} --host ${aws_db_instance.mysql_instance[count.index].address} --sql  < 2.initialize-database.sql
-        EOF
+              curl -s https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/0.9.0.RELEASE/mysql/1.initialize-database.sql | \
+                mysqlsh --user=${aws_db_instance.mysql_instance[count.index].username} \
+                        --password=${aws_db_instance.mysql_instance[count.index].password} \
+                        --host ${aws_db_instance.mysql_instance[count.index].address} \
+                        --sql
+              curl -s https://raw.githubusercontent.com/eventuate-foundation/eventuate-common/0.9.0.RELEASE/mysql/2.initialize-database.sql | \
+                mysqlsh --user=${aws_db_instance.mysql_instance[count.index].username} \
+                        --password=${aws_db_instance.mysql_instance[count.index].password} \
+                        --host ${aws_db_instance.mysql_instance[count.index].address} \
+                        --sql
+              EOF
   }
 }
 

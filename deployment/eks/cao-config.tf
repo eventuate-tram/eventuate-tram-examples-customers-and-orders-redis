@@ -1,7 +1,7 @@
 locals {
 
   rdb_endpoint   = var.use_rds_and_elastic_cache ? aws_db_instance.mysql_instance[0].endpoint : kubernetes_service.mysql[0].metadata.0.name
-  cache_endpoint = var.use_rds_and_elastic_cache ? aws_elasticache_cluster.redis_instance[0].cache_nodes.0.address : kubernetes_service.redis[0].metadata.0.name
+  redis_endpoint = var.use_rds_and_elastic_cache ? aws_elasticache_cluster.redis_instance[0].cache_nodes.0.address : kubernetes_service.redis[0].metadata.0.name
   cdc_endpoint   = kubernetes_service.cdc_service.metadata.0.name
 
   rdb_host = var.use_rds_and_elastic_cache ? split(":", aws_db_instance.mysql_instance[0].endpoint)[0] : kubernetes_service.mysql[0].metadata.0.name
@@ -11,7 +11,7 @@ locals {
     SPRING_DATASOURCE_USERNAME          = var.rds_username,
     SPRING_DATASOURCE_PASSWORD          = var.rds_pwd,
     SPRING_DATASOURCE_DRIVER_CLASS_NAME = "com.mysql.jdbc.Driver",
-    EVENTUATE_REDIS_SERVERS             = "${local.cache_endpoint}:6379",
+    EVENTUATE_REDIS_SERVERS             = "${local.redis_endpoint}:6379",
     EVENTUATE_REDIS_PARTITIONS          = 2,
     SPRING_PROFILES_ACTIVE              = "Redis",
     SPRING_SLEUTH_ENABLED               = "true",

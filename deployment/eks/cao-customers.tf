@@ -56,7 +56,7 @@ resource "kubernetes_deployment" "customer_service" {
         init_container {
           name    = "init-cache"
           image   = "busybox:1.31"
-          command = ["sh", "-c", "until nslookup ${local.cache_endpoint}; do echo waiting for ${local.cache_endpoint}; sleep 2; done;"]
+          command = ["sh", "-c", "until nslookup ${local.redis_endpoint}; do echo waiting for ${local.redis_endpoint}; sleep 2; done;"]
         }
         init_container {
           name    = "init-cdc"
