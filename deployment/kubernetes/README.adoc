@@ -1,0 +1,12 @@
+
+== Deployment on Kubernetes
+
+Use these manifests to deploy the example on an existing Kubernetes cluster.
+
+Apply the manifests using the below commands:
+
+```
+kubectl apply -f namespace/
+kubectl apply -f infrastructure-services/
+kubectl apply -f application-services/
+```

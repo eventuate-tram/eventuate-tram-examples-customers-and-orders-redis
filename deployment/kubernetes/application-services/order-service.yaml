@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+  namespace: eventuate-tram-examples-customers-and-orders
+spec:
+  ports:
+  - port: 8081
+    targetPort: 8080
+  selector:
+    svc: order-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  namespace: eventuate-tram-examples-customers-and-orders
+  labels:
+    svc: order-service
+spec:
+  selector:
+    matchLabels:
+      svc: order-service
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        svc: order-service
+    spec:
+      containers:
+      - name: order-service
+        image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: httpport
+        env:
+          - name: SPRING_DATASOURCE_URL
+            value: jdbc:mysql://mysql/eventuate
+          - name: SPRING_DATASOURCE_USERNAME
+            value: mysqluser
+          - name: SPRING_DATASOURCE_PASSWORD
+            value: mysqlpw
+          - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+            value: com.mysql.jdbc.Driver
+          - name: EVENTUATE_REDIS_SERVERS
+            value: redis:6379
+          - name: EVENTUATE_REDIS_PARTITIONS
+            value: "2"
+          - name: SPRING_PROFILES_ACTIVE
+            value: Redis
+          - name: SPRING_SLEUTH_ENABLED
+            value: "true"
+          - name: SPRING_SLEUTH_SAMPLER_PROBABILITY
+            value: "1"
+          - name: SPRING_ZIPKIN_BASE_URL
+            value: http://zipkin:9411/
+          - name: JAVA_OPTS
+            value: -Xmx128m
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          periodSeconds: 10
+          failureThreshold: 14
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          periodSeconds: 10
+          failureThreshold: 14
+---
