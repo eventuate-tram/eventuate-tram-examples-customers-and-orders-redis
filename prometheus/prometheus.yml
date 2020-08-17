@@ -32,22 +32,22 @@ scrape_configs:
   - job_name: 'cdc-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-    - targets: ['localhost:8099']
-    
-    
+    - targets: ['cdc-service:8080']
+
+
   - job_name: 'customer-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-    - targets: ['localhost:8081']
-    
-    
+    - targets: ['customer-service:8080']
+
+
   - job_name: 'order-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-    - targets: ['localhost:8082']
+    - targets: ['order-service:8080']
 
 
   - job_name: 'order-history-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-    - targets: ['localhost:8083']
+    - targets: ['order-history-service:8080']

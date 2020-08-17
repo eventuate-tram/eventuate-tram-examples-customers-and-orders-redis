@@ -5,20 +5,20 @@ datasources:
   - name: Zipkin
     type: zipkin
     access: proxy
-    url: http://localhost:9411
+    url: http://zipkin:9411
     editable: true
     uid: zipkin9411
-    
+
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: http://localhost:9090
+    url: http://prometheus:9090
     editable: true
 
   - name: Loki
     type: loki
     access: proxy
-    url: http://localhost:3100
+    url: http://loki:3100
     editable: true
     isDefault: true
     jsonData:
@@ -27,4 +27,3 @@ datasources:
           matcherRegex: "\\[.*,(\\w+),.*,.*\\]"
           name: TraceID
           url: "$${__value.raw}"
-
