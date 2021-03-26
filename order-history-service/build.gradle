@@ -12,7 +12,7 @@ dependencies {
 
     compile project(":order-history-service-common")
 
-    compile "io.eventuate.tram.core:eventuate-tram-consumer-redis:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-consumer-redis"
 
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
