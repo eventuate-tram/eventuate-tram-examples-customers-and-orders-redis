@@ -3,6 +3,7 @@ import io.eventuate.examples.tram.ordersandcustomers.customers.CustomerCommonCon
 import io.eventuate.examples.tram.ordersandcustomers.customers.CustomerRedisConfiguration;
 import io.eventuate.examples.tram.ordersandcustomers.customers.domain.Customer;
 import io.eventuate.examples.tram.ordersandcustomers.customers.domain.CustomerRepository;
+import io.eventuate.util.spring.swagger.CommonSwaggerConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class CustomerJpaTest {
   private Logger logger = LoggerFactory.getLogger(getClass());
 
   @Configuration
-  @EnableAutoConfiguration
+  @EnableAutoConfiguration(exclude = CommonSwaggerConfiguration.class)
   @Import({CustomerCommonConfiguration.class, CustomerRedisConfiguration.class})
   static public class CustomerJpaTestConfiguration {
   }
