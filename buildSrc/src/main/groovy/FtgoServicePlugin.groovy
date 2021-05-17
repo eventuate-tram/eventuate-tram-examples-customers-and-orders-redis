@@ -24,8 +24,8 @@ class FtgoServicePlugin implements Plugin<Project> {
 
             compile "io.eventuate.tram.core:eventuate-tram-spring-cloud-sleuth-integration"
 
-            compile "org.springframework.data:spring-data-redis:2.2.0.M1"
-            compile 'io.lettuce:lettuce-core:5.1.4.RELEASE'
+            compile "org.springframework.data:spring-data-redis:${project.ext.springBootVersion}"
+            compile 'io.lettuce:lettuce-core:6.1.2.RELEASE'
             
         }
 
