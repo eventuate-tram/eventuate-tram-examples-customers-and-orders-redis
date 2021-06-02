@@ -78,16 +78,17 @@ A service subscribes to the events and updates its JPA entities in response.
 Note: you do not need to install Gradle since it will be downloaded automatically.
 You just need to have Java 8 installed.
 
-Build and launch the services using https://docs.docker.com/compose/[Docker Compose]:
+Build and launch the services using https://docs.docker.com/compose/[Docker Compose] invoking with Docker Compose Gradle Plugin:
 
-If the containers aren't accessible via `localhost` - e.g. you are using Docker Toolbox, you will have to use `${DOCKER_HOST_IP}` instead of localhost.
+```
+./gradlew composeUp
+```
+
+Note: If the containers aren't accessible via `localhost` - e.g. you are using Docker Toolbox - you will first have to set `${DOCKER_HOST_IP}` and use it instead of `localhost`.
 See this http://eventuate.io/docs/usingdocker.html[guide to setting `DOCKER_HOST_IP`] for more information.
 
-```
-docker-compose composeUp
-```
-
 == Using the application
+
 
 Once the application has started, you can use the application via the Swagger UI:
 
