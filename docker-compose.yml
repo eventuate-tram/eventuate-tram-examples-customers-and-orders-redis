@@ -72,7 +72,7 @@ services:
       JAVA_OPTS: -Xmx64m
 
   mysql:
-    image: eventuateio/eventuate-mysql:$EVENTUATE_COMMON_VERSION
+    image: eventuateio/eventuate-mysql8:$EVENTUATE_COMMON_VERSION
     ports:
       - 3306:3306
     environment:
