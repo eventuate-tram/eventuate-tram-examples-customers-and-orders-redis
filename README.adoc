@@ -1,3 +1,9 @@
+= An Eventuate project
+
+image::https://eventuate.io/i/logo.gif[]
+
+This project is part of http://eventuate.io[Eventuate], which is a microservices collaboration platform.
+
 # Eventuate Tram Customers and Orders
 
 This application  demonstrates how to maintain data consistency in an Java/JDBC/JPA-base microservice architecture using http://microservices.io/patterns/data/saga.html[sagas].
