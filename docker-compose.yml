@@ -5,6 +5,7 @@ services:
     build:
       context: ./customer-service/
       args:
+        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
     image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-customer-service
     ports:
@@ -31,6 +32,7 @@ services:
     build:
       context: ./order-service/
       args:
+        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
     image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-service
     ports:
@@ -56,6 +58,7 @@ services:
     build:
       context: ./order-history-service/
       args:
+        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
         baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
     image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-history-service
     ports:
