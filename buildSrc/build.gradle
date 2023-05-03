@@ -5,6 +5,6 @@ repositories {
 }
 
 dependencies {
-    compile 'mysql:mysql-connector-java:5.1.39'
+    compile 'mysql:mysql-connector-java:8.0.21'
     compile 'commons-lang:commons-lang:2.6'
 }

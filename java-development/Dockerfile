@@ -1,4 +1,4 @@
-FROM eventuateio/eventuate-examples-docker-images-java-example-base-image:BUILD-5
+FROM eventuateio/eventuate-examples-docker-images-spring-example-base-image:BUILD-5
 WORKDIR /development
 RUN apt-get update && \
     apt-get install -y jq && \
