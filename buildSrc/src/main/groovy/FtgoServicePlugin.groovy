@@ -22,9 +22,11 @@ class FtgoServicePlugin implements Plugin<Project> {
             compile 'org.springframework.cloud:spring-cloud-starter-zipkin'
             compile 'io.zipkin.brave:brave-bom:4.17.1'
 
-            compile "io.eventuate.tram.core:eventuate-tram-spring-cloud-sleuth-integration"
+            implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
+            implementation "org.springframework.cloud:spring-cloud-sleuth-zipkin"
+            implementation "io.eventuate.tram.springcloudsleuth:eventuate-tram-spring-cloud-sleuth-tram-starter"
 
-            compile "org.springframework.data:spring-data-redis:2.2.0.M1"
+            compile "org.springframework.data:spring-data-redis:2.2.0.RELEASE"
             compile 'io.lettuce:lettuce-core:5.1.4.RELEASE'
             
         }

@@ -72,11 +72,6 @@ subprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
-        maven { url "https://repo.spring.io/milestone" }
-        maven {
-            url "https://dl.bintray.com/eventuateio-oss/eventuate-maven-release"
-        }
         eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
     }
 
@@ -87,6 +82,8 @@ subprojects {
 
     dependencies {
         implementation(platform("io.eventuate.platform:eventuate-platform-dependencies:$eventuatePlatformVersion"))
+        testImplementation "junit:junit:4.13.2"
+
     }
 }
 
