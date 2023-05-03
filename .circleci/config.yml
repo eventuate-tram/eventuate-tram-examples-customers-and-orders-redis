@@ -1,37 +1,11 @@
-version: 2
-jobs:
-  build:
-    machine: true
-    working_directory: ~/eventuate-tram-examples-customers-and-orders-redis
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - eventuate-tram-examples-customers-and-orders-redis-{{ checksum "gradle.properties" }}
-            - eventuate-tram-examples-customers-and-orders-redis-
-      - run:
-          command: |
-            export TERM=dumb
-            ./gradlew testClasses
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: eventuate-tram-examples-customers-and-orders-redis-{{ checksum "gradle.properties" }}
-      - run:
-          command: |
-            ./.circleci/upgrade-docker-compose.sh
-            . ./.circleci/setenv-circle-ci.sh
-            ./build-and-test-all.sh
-      - run:
-          command: |
-            ./publish-docker-images.sh
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/junit/
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/junit
-      - store_artifacts:
-          path: ~/junit
+version: 2.1
+orbs:
+  eventuate-gradle-build-and-test: "eventuate_io/eventuate-gradle-build-and-test@0.2.1"
+workflows:
+  version: 2.1
+  build-test-and-deploy:
+    jobs:
+      - eventuate-gradle-build-and-test/build-and-test:
+          name: mysql-intel
+          resource_class: large
+          script: ./.circleci/build-and-deploy.sh
