@@ -1,6 +1,5 @@
 package io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.web;
 
-import io.eventuate.examples.tram.ordersandcustomers.commonswagger.CommonSwaggerConfiguration;
 import io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.service.OrderHistoryServiceServiceConfiguration;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
 @Configuration
 @ComponentScan
-@Import({CommonSwaggerConfiguration.class, OrderHistoryServiceServiceConfiguration.class})
+@Import({OrderHistoryServiceServiceConfiguration.class})
 public class OrderHistoryServiceWebConfiguration {
 
   @Bean

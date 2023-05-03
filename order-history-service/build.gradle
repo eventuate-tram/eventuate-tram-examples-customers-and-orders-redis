@@ -5,7 +5,6 @@ dependencies {
     compile project(":customer-service-api-events")
     compile project(":order-service-api-events")
 
-    compile project(":common-swagger")
 
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"

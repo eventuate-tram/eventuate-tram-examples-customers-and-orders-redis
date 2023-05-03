@@ -85,6 +85,10 @@ subprojects {
         implementation(platform("io.eventuate.platform:eventuate-platform-dependencies:$eventuatePlatformVersion"))
         implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"))
 
+        constraints {
+            implementation "org.springdoc:springdoc-openapi-ui:$springDocOpenApiUiVersion"
+        }
+
         testImplementation "junit:junit:4.13.2"
 
     }

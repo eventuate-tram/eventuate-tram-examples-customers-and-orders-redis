@@ -1,7 +1,6 @@
 apply plugin: FtgoServicePlugin
 
 dependencies {
-    compile project(":common-swagger")
     compile project(":common")
     compile project(":order-service-api-events")
     compile project(":customer-service-api-events")
