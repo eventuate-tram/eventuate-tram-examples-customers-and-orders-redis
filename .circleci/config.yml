@@ -8,4 +8,5 @@ workflows:
       - eventuate-gradle-build-and-test/build-and-test:
           name: mysql-intel
           resource_class: large
-          script: ./.circleci/build-and-deploy.sh
+          script: ./build-and-test-all.sh
+
