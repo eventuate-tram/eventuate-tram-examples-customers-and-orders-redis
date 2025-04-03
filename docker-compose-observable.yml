@@ -1,20 +1,24 @@
-version: '3'
+version: '3.4'
+
+x-logging:
+  &loki-logging
+    driver: loki
+    options:
+      loki-url: "http://localhost:3100/loki/api/v1/push"
+
+
 services:
 
   customer-service:
-    build:
-      context: ./customer-service/
-      args:
-        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
-        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
-    image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-customer-service
+    logging: *loki-logging
+    build: ./customer-service/
     ports:
       - "8081:8080"
     depends_on:
       - mysql
       - redis
       - cdc-service
-      - zipkin
+      - grafana
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
       SPRING_DATASOURCE_USERNAME: mysqluser
@@ -26,22 +30,19 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+      JAVA_OPTS: -Xmx128m
 
 
   order-service:
-    build:
-      context: ./order-service/
-      args:
-        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
-        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
-    image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-service
+    logging: *loki-logging
+    build: ./order-service/
     ports:
       - "8082:8080"
     depends_on:
       - mysql
       - redis
       - cdc-service
-      - zipkin
+      - grafana
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
       SPRING_DATASOURCE_USERNAME: mysqluser
@@ -53,19 +54,16 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+      JAVA_OPTS: -Xmx128m
 
   order-history-service:
-    build:
-      context: ./order-history-service/
-      args:
-        serviceImageVersion: ${SERVICE_IMAGE_VERSION}
-        baseImageVersion: ${EVENTUATE_JAVA_BASE_IMAGE_VERSION}
-    image: eventuateexamples/eventuate-tram-examples-customers-and-orders-redis-order-history-service
+    logging: *loki-logging
+    build: ./order-history-service/
     ports:
       - "8083:8080"
     depends_on:
       - redis
-      - zipkin
+      - grafana
     environment:
       EVENTUATE_REDIS_SERVERS: redis:6379
       EVENTUATE_REDIS_PARTITIONS: 2
@@ -73,18 +71,21 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+      JAVA_OPTS: -Xmx128m
 
 ## Infrastructure
 
   zipkin:
+    logging: *loki-logging
     image: openzipkin/zipkin:2.21
     ports:
       - "9411:9411"
     environment:
-      JAVA_OPTS: -Xmx64m
+      JAVA_OPTS: -Xmx128m
 
   mysql:
-    image: eventuateio/eventuate-mysql8:$EVENTUATE_COMMON_VERSION
+    logging: *loki-logging
+    image: eventuateio/eventuate-mysql:0.9.0.RELEASE
     ports:
       - 3306:3306
     environment:
@@ -93,12 +94,14 @@ services:
       - MYSQL_PASSWORD=mysqlpw
 
   redis:
+    logging: *loki-logging
     image: redis:5.0.7
     ports:
       - 6379:6379
 
   cdc-service:
-    image: eventuateio/eventuate-cdc-service:$EVENTUATE_CDC_VERSION
+    logging: *loki-logging
+    image: eventuateio/eventuate-cdc-service:0.6.1.RELEASE
     ports:
       - "8099:8080"
     depends_on:
@@ -118,26 +121,41 @@ services:
       SPRING_PROFILES_ACTIVE: Redis
       EVENTUATE_REDIS_SERVERS: redis:6379
       EVENTUATE_REDIS_PARTITIONS: 2
-      EVENTUATE_OUTBOX_ID: 1
-      JAVA_OPTS: -Xmx64m
+      JAVA_OPTS: -Xmx128m
 
 
-# Development
+## Observability
 
-  java-development:
-    image: eventuateio/eventuate-tram-examples-customers-and-orders-redis-java-development:latest
+  loki:
+    logging: *loki-logging
+    image: grafana/loki:1.5.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  prometheus:
+    logging: *loki-logging
+    image: prom/prometheus:v2.1.0
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - .:/development
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HOST_WORKING_DIR}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
-      SPRING_DATASOURCE_USERNAME: mysqluser
-      SPRING_DATASOURCE_PASSWORD: mysqlpw
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
-      EVENTUATE_REDIS_SERVERS: redis:6379
-      EVENTUATE_REDIS_PARTITIONS: 2
-      SPRING_PROFILES_ACTIVE: Redis
-      SPRING_SLEUTH_ENABLED: "true"
-      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
-      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+      HOST_WORKING_DIR: "${PWD}"
+
+  grafana:
+    logging: *loki-logging
+    depends_on:
+      - loki
+      - prometheus
+      - zipkin
+    image: grafana/grafana:master
+    ports:
+      - "3000:3000"
+    volumes:
+      - ${HOST_WORKING_DIR}/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ${HOST_WORKING_DIR}/grafana/grafana.ini:/etc/grafana/grafana.ini
+    environment:
       HOST_WORKING_DIR: "${PWD}"
