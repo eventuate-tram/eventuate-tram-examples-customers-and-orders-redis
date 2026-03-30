@@ -2,8 +2,8 @@ package io.eventuate.examples.tram.ordersandcustomers.orderservice.domain.events
 
 import io.eventuate.examples.tram.ordersandcustomers.commondomain.Money;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 
 @Embeddable
 public class OrderDetails {

@@ -68,30 +68,39 @@ subprojects.each {
 subprojects {
 
     apply plugin: "java"
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
-    targetCompatibility = '8'
-    sourceCompatibility = '8'
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
 
     repositories {
         mavenCentral()
         eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
     }
 
-    // Deadlock on H2 shutdown - multiple shutdown hooks for appctx
+    if (!project.name.endsWith("-service") && project.name != "end-to-end-tests") {
+        bootJar.enabled = false
+        jar.enabled = true
+    }
+
     test {
         forkEvery 1
+        useJUnitPlatform()
     }
 
     dependencies {
         implementation(platform("io.eventuate.platform:eventuate-platform-dependencies:$eventuatePlatformVersion"))
-        implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"))
 
         constraints {
-            implementation "org.springdoc:springdoc-openapi-ui:$springDocOpenApiUiVersion"
+            implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiUiVersion"
         }
 
-        testImplementation "junit:junit:4.13.2"
-
+        testImplementation "org.junit.jupiter:junit-jupiter"
+        testRuntimeOnly "org.junit.platform:junit-platform-launcher"
     }
 }
 

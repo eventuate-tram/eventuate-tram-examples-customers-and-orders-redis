@@ -1,5 +1,6 @@
 dependencies {
-    compile project(":common")
-    compile project(":order-service-api-events")
-    compileOnly "org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion"
+    implementation project(":common")
+    implementation project(":order-service-api-events")
+    implementation "commons-lang:commons-lang:2.6"
+    compileOnly "org.springframework.boot:spring-boot-starter-data-redis"
 }

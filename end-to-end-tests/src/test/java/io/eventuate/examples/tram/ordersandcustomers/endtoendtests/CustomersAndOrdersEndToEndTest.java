@@ -10,26 +10,20 @@ import io.eventuate.examples.tram.ordersandcustomers.orders.webapi.CreateOrderRe
 import io.eventuate.examples.tram.ordersandcustomers.orders.webapi.GetOrderResponse;
 import io.eventuate.examples.tram.ordersandcustomers.orderservice.domain.events.OrderState;
 import io.eventuate.util.test.async.Eventually;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.isIn;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = CustomersAndOrdersEndToEndTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CustomersAndOrdersEndToEndTest{
 
@@ -92,8 +86,8 @@ public class CustomersAndOrdersEndToEndTest{
 
       assertEquals(2, orders.size());
 
-      assertThat(orders.get(order1Id).getState(), is(OrderState.APPROVED));
-      assertThat(orders.get(order2Id).getState(), is(OrderState.REJECTED));
+      assertEquals(OrderState.APPROVED, orders.get(order1Id).getState());
+      assertEquals(OrderState.REJECTED, orders.get(order2Id).getState());
     });
   }
 
@@ -103,7 +97,7 @@ public class CustomersAndOrdersEndToEndTest{
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
 
-    Assert.assertNotNull(response);
+    assertNotNull(response);
 
     return response.getBody();
   }

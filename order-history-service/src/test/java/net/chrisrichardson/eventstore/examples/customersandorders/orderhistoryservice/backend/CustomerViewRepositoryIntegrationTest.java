@@ -5,22 +5,28 @@ import io.eventuate.examples.tram.ordersandcustomers.orderhistory.common.Custome
 import io.eventuate.examples.tram.ordersandcustomers.orderhistory.common.OrderInfo;
 import io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.persistence.CustomerViewRepository;
 import io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.persistence.OrderHistoryServicePersistenceConfiguration;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = OrderHistoryServicePersistenceConfiguration.class,
+@SpringBootTest(classes = CustomerViewRepositoryIntegrationTest.TestConfig.class,
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class CustomerViewRepositoryIntegrationTest {
+
+  @Configuration
+  @EnableAutoConfiguration
+  @Import(OrderHistoryServicePersistenceConfiguration.class)
+  static class TestConfig {
+  }
 
   @Autowired
   private CustomerViewRepository customerViewRepository;
@@ -93,7 +99,7 @@ public class CustomerViewRepositoryIntegrationTest {
 
   private void assertCustomerHasOrders(CustomerView expected, List<OrderInfo> expectedOrders) {
     CustomerView customerView = customerViewRepository.findById(expected.getId()).get();
-    Assert.assertEquals(expectedOrders.stream().collect(Collectors.toMap(OrderInfo::getOrderId, (x) -> x)), customerView.getOrders());
+    Assertions.assertEquals(expectedOrders.stream().collect(Collectors.toMap(OrderInfo::getOrderId, (x) -> x)), customerView.getOrders());
     assertEquals(expected.getId(), customerView.getId());
     assertEquals(expected.getName(), customerView.getName());
     assertEquals(expected.getCreditLimit(), customerView.getCreditLimit());

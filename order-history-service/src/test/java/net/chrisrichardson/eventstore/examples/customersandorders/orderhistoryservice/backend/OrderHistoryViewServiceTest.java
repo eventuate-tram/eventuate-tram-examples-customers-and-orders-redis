@@ -5,16 +5,13 @@ import io.eventuate.examples.tram.ordersandcustomers.orderhistory.common.Custome
 import io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.persistence.CustomerViewRepository;
 import io.eventuate.examples.tram.ordersandcustomers.orderhistoryservice.service.OrderHistoryViewService;
 import io.eventuate.examples.tram.ordersandcustomers.orderservice.domain.events.OrderState;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = OrderHistoryViewServiceTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class OrderHistoryViewServiceTest {
 
@@ -57,6 +54,5 @@ public class OrderHistoryViewServiceTest {
     assertEquals(OrderState.REJECTED, customerView.getOrders().get(orderId2).getState());
 
   }
-
 
 }

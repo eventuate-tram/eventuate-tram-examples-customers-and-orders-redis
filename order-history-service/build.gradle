@@ -1,22 +1,17 @@
 apply plugin: FtgoServicePlugin
 
 dependencies {
+    implementation project(":common")
+    implementation project(":customer-service-api-events")
+    implementation project(":order-service-api-events")
 
-    compile project(":customer-service-api-events")
-    compile project(":order-service-api-events")
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
 
+    implementation project(":order-history-service-common")
 
-    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    implementation "io.eventuate.tram.core:eventuate-tram-spring-events"
+    implementation "io.eventuate.tram.core:eventuate-tram-consumer-redis"
 
-    compile project(":order-history-service-common")
-
-    compile "io.eventuate.tram.core:eventuate-tram-consumer-redis"
-
-    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
-
-    testCompile "junit:junit:4.12"
-    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
-
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

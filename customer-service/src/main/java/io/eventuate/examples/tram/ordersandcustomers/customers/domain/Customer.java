@@ -5,7 +5,7 @@ import io.eventuate.examples.tram.ordersandcustomers.customerservice.domain.even
 import io.eventuate.tram.events.publisher.ResultWithEvents;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Collections;
 import java.util.Map;
 
