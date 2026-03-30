@@ -9,4 +9,6 @@ workflows:
           name: mysql-intel
           resource_class: large
           script: ./build-and-test-all.sh
+          machine_image: ubuntu-2204:2024.01.1
+          java_version_to_install: '17'
 
