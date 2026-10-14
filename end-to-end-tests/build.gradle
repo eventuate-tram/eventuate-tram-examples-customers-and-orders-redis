@@ -6,7 +6,7 @@ dependencies {
     testImplementation project(":customer-service-api-web")
     testImplementation project(":order-service-api-web")
 
-    testImplementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation "org.springframework.boot:spring-boot-starter-webmvc"
     testImplementation "io.eventuate.util:eventuate-util-test:$eventuateUtilVersion"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
